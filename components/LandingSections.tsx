@@ -20,25 +20,27 @@ const LandingSections = () => {
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Capture Your Thoughts with NoteWorthy
+                  Página de epoint
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  The intelligent note-taking app that helps you organize your
-                  ideas, boost productivity, and never forget a thing.
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Corrupti ducimus consequuntur consectetur deserunt sint fuga
+                  earum. Libero eveniet blanditiis nam ullam, voluptatibus, sed
+                  eos commodi quo fuga dolorum dolores sequi.
                 </p>
               </div>
-              <div className="space-x-4">
+              {/* <div className="space-x-4">
                 <Button asChild>
                   <Link href="/signup">Get Started</Link>
                 </Button>
                 <Button variant="outline" asChild>
                   <Link href="#features">Learn More</Link>
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
-        <section
+        {/* <section
           id="features"
           className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800"
         >
@@ -120,8 +122,8 @@ const LandingSections = () => {
               </div>
             </div>
           </div>
-        </section>
-        <section id="pricing" className="w-full py-12 md:py-24 lg:py-32">
+        </section> */}
+        {/* <section id="pricing" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">
               Choose Your Plan
@@ -240,11 +242,13 @@ const LandingSections = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
       </main>
+      <div className="h-[1000px]"></div>
+
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 NoteWorthy. All rights reserved.
+          mark.mordvin@epoint.es
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">
