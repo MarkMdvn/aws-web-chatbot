@@ -166,7 +166,7 @@ export default function Chat() {
             className="fixed bottom-4 right-4 z-50 w-[95%] md:w-[500px]"
           >
             <Card className="border-2">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-4 rounded-t-lg shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-gradient-to-r bg-black p-4 rounded-t-lg shadow-lg">
                 <div className="flex items-center space-x-3">
                   <Image
                     src="/epoint-logo-dark-transparent.png"
