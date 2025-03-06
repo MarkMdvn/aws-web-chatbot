@@ -50,8 +50,6 @@ export async function POST(request: Request) {
       completion += decoder.decode(chunk.chunk.bytes);
     }
 
-    // Log the agent's response (the completion) to the console
-    console.log("Agent Response:", completion);
 
     return NextResponse.json({ text: completion });
   } catch (error: any) {

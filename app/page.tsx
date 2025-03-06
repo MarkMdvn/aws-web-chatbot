@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,6 +30,7 @@ export default function Chat() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showChatIcon, setShowChatIcon] = useState(false);
   const chatIconRef = useRef<HTMLButtonElement>(null);
+  const [processedMessages, setProcessedMessages] = useState([]);
 
   const {
     messages,
@@ -42,24 +44,48 @@ export default function Chat() {
   } = useChat({
     api: "/api/aws-bedrock",
     streamProtocol: "text",
-    transformResponse: (res) => {
-      console.log("transformResponse raw:", res);
-     
-      const content =
-        typeof res === "object" && res !== null && "text" in res
-          ? res.text
-          : String(res);
-      return {
-        id: Date.now().toString(),
-        role: "assistant",
-        content,
-        createdAt: new Date().toISOString(),
-      };
-    },
-    onFinish: (message, options) => {
-      console.log("onFinish:", message, options);
-    },
   });
+
+  // Process messages to extract text content from JSON responses
+  useEffect(() => {
+    if (!messages || messages.length === 0) {
+      setProcessedMessages([]);
+      return;
+    }
+
+    const processed = messages.map((message) => {
+      if (message.role === "user") {
+        return message;
+      }
+
+      // Process assistant messages to extract text from JSON if needed
+      try {
+        let content = message.content;
+
+        // Check if the content is a JSON string
+        if (
+          typeof content === "string" &&
+          content.trim().startsWith("{") &&
+          content.includes('"text"')
+        ) {
+          const parsed = JSON.parse(content);
+          if (parsed.text) {
+            content = parsed.text;
+          }
+        }
+
+        return {
+          ...message,
+          content,
+        };
+      } catch (error) {
+        console.error("Error processing message:", error);
+        return message;
+      }
+    });
+
+    setProcessedMessages(processed);
+  }, [messages]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -85,7 +111,7 @@ export default function Chat() {
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [processedMessages]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -126,6 +152,7 @@ export default function Chat() {
             <Card className="border-2">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                 <div className="flex items-center">
+                  <strong>Asistente</strong>
                   <Image
                     src="/logo-epoint-white.png"
                     alt="Logo epoint"
@@ -147,12 +174,12 @@ export default function Chat() {
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[300px] pr-4">
-                  {messages?.length === 0 && (
+                  {processedMessages?.length === 0 && (
                     <div className="w-full mt-32 text-gray-500 flex items-center justify-center gap-3">
                       Comienza una conversación
                     </div>
                   )}
-                  {messages?.map((message, index) => (
+                  {processedMessages?.map((message, index) => (
                     <div
                       key={index}
                       className={`mb-4 ${
@@ -160,41 +187,63 @@ export default function Chat() {
                       }`}
                     >
                       <div
-                        className={`inline-block rounded-2xl p-2 ${
+                        className={`flex ${
                           message.role === "user"
-                            ? "bg-primary text-primary-foreground "
-                            : "bg-muted "
+                            ? "justify-end"
+                            : "justify-start items-start"
                         }`}
                       >
-                        <ReactMarkdown
-                          children={message.content}
-                          remarkPlugins={[remarkGfm]}
-                          components={{
-                            code({
-                              node,
-                              inline,
-                              className,
-                              children,
-                              ...props
-                            }) {
-                              return inline ? (
-                                <code
-                                  {...props}
-                                  className="bg-gray-200 px-1 rounded"
-                                >
-                                  {children}
-                                </code>
-                              ) : (
-                                <pre
-                                  {...props}
-                                  className="bg-gray-200 p-2 rounded"
-                                >
-                                  {children}
-                                </pre>
-                              );
-                            },
-                          }}
-                        />
+                        {message.role === "assistant" && (
+                          <div className="mr-2 flex-shrink-0">
+                            <div className="bg-primary rounded-full w-6 h-6 flex items-center justify-center overflow-hidden">
+                              <Image
+                                src="/logo-epoint-blanco.png"
+                                alt="Assistant"
+                                width={24}
+                                height={24}
+                                className="rounded-full"
+                              />
+                            </div>
+                          </div>
+                        )}
+                        <div
+                          className={`inline-block rounded-2xl p-2 ${
+                            message.role === "user"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-[#fbcfe8]"
+                          }`}
+                        >
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm, remarkBreaks]}
+                            components={{
+                              code({
+                                node,
+                                inline,
+                                className,
+                                children,
+                                ...props
+                              }) {
+                                return inline ? (
+                                  <code
+                                    {...props}
+                                    className="bg-gray-200 px-1 rounded"
+                                  >
+                                    {children}
+                                  </code>
+                                ) : (
+                                  <pre
+                                    {...props}
+                                    className="bg-gray-200 p-2 rounded"
+                                  >
+                                    {children}
+                                  </pre>
+                                );
+                              },
+                            }}
+                          >
+                            {message.content}
+                          </ReactMarkdown>
+                        </div>
                       </div>
                     </div>
                   ))}
