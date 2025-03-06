@@ -41,10 +41,26 @@ export default function Chat() {
     stop,
     reload,
     error,
+    setMessages,
   } = useChat({
     api: "/api/aws-bedrock",
     streamProtocol: "text",
   });
+
+  // Add initial welcome message when component mounts
+  useEffect(() => {
+    if (messages.length === 0) {
+      // Add the initial welcome message
+      const welcomeMessage = {
+        id: "welcome-message",
+        role: "assistant",
+        content:
+          "¡Hola! Soy el asistente virtual de epoint.es ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre nuestros servicios de desarrollo web, marketing digital o consultoría tecnológica.",
+        createdAt: new Date().toISOString(),
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, []);
 
   // Process messages to extract text content from JSON responses
   useEffect(() => {
@@ -91,7 +107,7 @@ export default function Chat() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 200) {
+      if (window.scrollY > 100) {
         setShowChatIcon(true);
       } else {
         setShowChatIcon(false);
@@ -150,103 +166,105 @@ export default function Chat() {
             className="fixed bottom-4 right-4 z-50 w-[95%] md:w-[500px]"
           >
             <Card className="border-2">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <div className="flex items-center">
-                  <strong>Asistente</strong>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-4 rounded-t-lg shadow-lg">
+                <div className="flex items-center space-x-3">
                   <Image
-                    src="/logo-epoint-white.png"
+                    src="/epoint-logo-dark-transparent.png"
                     alt="Logo epoint"
-                    width={110}
-                    height={32}
+                    width={150}
+                    height={50}
                     className="mr-2"
                   />
-                  <CardTitle className="text-lg font-bold"></CardTitle>
                 </div>
                 <Button
                   onClick={toggleChat}
                   variant="ghost"
                   size="sm"
-                  className="px-2 py-0"
+                  className="px-2 py-0 text-white hover:bg-white/20 transition-colors"
                 >
                   <X className="size-4" />
                   <span className="sr-only">Cerrar Chat</span>
                 </Button>
               </CardHeader>
+
+              <hr className="border-0 mb-2 h-[2px] bg-gradient-to-r from-pink-500 via-blue-500 to-violet-500" />
               <CardContent>
-                <ScrollArea className="h-[300px] pr-4">
-                  {processedMessages?.length === 0 && (
+                <ScrollArea className="h-[400px] pr-4">
+                  {processedMessages?.length === 0 ? (
                     <div className="w-full mt-32 text-gray-500 flex items-center justify-center gap-3">
                       Comienza una conversación
                     </div>
-                  )}
-                  {processedMessages?.map((message, index) => (
-                    <div
-                      key={index}
-                      className={`mb-4 ${
-                        message.role === "user" ? "text-right" : "text-left"
-                      }`}
-                    >
+                  ) : (
+                    processedMessages?.map((message, index) => (
                       <div
-                        className={`flex ${
-                          message.role === "user"
-                            ? "justify-end"
-                            : "justify-start items-start"
+                        key={index}
+                        className={`mb-4 ${
+                          message.role === "user" ? "text-right" : "text-left"
                         }`}
                       >
-                        {message.role === "assistant" && (
-                          <div className="mr-2 flex-shrink-0">
-                            <div className="bg-primary rounded-full w-6 h-6 flex items-center justify-center overflow-hidden">
-                              <Image
-                                src="/logo-epoint-blanco.png"
-                                alt="Assistant"
-                                width={24}
-                                height={24}
-                                className="rounded-full"
-                              />
-                            </div>
-                          </div>
-                        )}
                         <div
-                          className={`inline-block rounded-2xl p-2 ${
+                          className={`flex ${
                             message.role === "user"
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-[#fbcfe8]"
+                              ? "justify-end"
+                              : "justify-start items-start"
                           }`}
                         >
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm, remarkBreaks]}
-                            components={{
-                              code({
-                                node,
-                                inline,
-                                className,
-                                children,
-                                ...props
-                              }) {
-                                return inline ? (
-                                  <code
-                                    {...props}
-                                    className="bg-gray-200 px-1 rounded"
-                                  >
-                                    {children}
-                                  </code>
-                                ) : (
-                                  <pre
-                                    {...props}
-                                    className="bg-gray-200 p-2 rounded"
-                                  >
-                                    {children}
-                                  </pre>
-                                );
-                              },
-                            }}
+                          {message.role === "assistant" && (
+                            <div className="mr-2 flex-shrink-0">
+                              <div className="rounded-full w-6 h-6 flex items-center justify-center overflow-hidden shadow-[0_0_10px_rgba(255,105,180,0.5)]">
+                                <Image
+                                  src="/logo-epoint-blanco.png"
+                                  alt="Assistant"
+                                  width={24}
+                                  height={24}
+                                  className="rounded-full"
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          <div
+                            className={`inline-block rounded-2xl p-2  ${
+                              message.role === "user"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-[#fbcfe8]"
+                            }`}
                           >
-                            {message.content}
-                          </ReactMarkdown>
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm, remarkBreaks]}
+                              components={{
+                                code({
+                                  node,
+                                  inline,
+                                  className,
+                                  children,
+                                  ...props
+                                }) {
+                                  return inline ? (
+                                    <code
+                                      {...props}
+                                      className="bg-gray-200 px-1 rounded"
+                                    >
+                                      {children}
+                                    </code>
+                                  ) : (
+                                    <pre
+                                      {...props}
+                                      className="bg-gray-200 p-2 rounded"
+                                    >
+                                      {children}
+                                    </pre>
+                                  );
+                                },
+                              }}
+                            >
+                              {message.content}
+                            </ReactMarkdown>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                   {isLoading && (
                     <div className="w-full flex items-center justify-center gap-3">
                       <Loader2 className="animate-spin h-5 w-5 text-primary" />
