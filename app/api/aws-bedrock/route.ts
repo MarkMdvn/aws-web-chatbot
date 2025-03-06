@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
     // Agent details
     const agentId = "SS2ALX2HQ3";
-    const agentAliasId = "LY6OCPKYDK";
+    const agentAliasId = "UVLDFD4TV5";
 
     // Generate a sessionId if one is not provided
     const effectiveSessionId = sessionId || randomUUID();
@@ -46,17 +46,23 @@ export async function POST(request: Request) {
 
     let completion = "";
     const decoder = new TextDecoder("utf-8");
+    if (!response.completion) {
+      return NextResponse.json(
+        { error: "No completion data received from the agent." },
+        { status: 500 }
+      );
+    }
     for await (const chunk of response.completion) {
-      completion += decoder.decode(chunk.chunk.bytes);
+      if (chunk.chunk) {
+        completion += decoder.decode(chunk.chunk.bytes);
+      }
     }
 
-
     return NextResponse.json({ text: completion });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Agent invocation error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal server error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

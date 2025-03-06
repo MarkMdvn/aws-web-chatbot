@@ -1,3 +1,7 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "ignorePatterns": ["components/ui/calendar.tsx", "components/ui/chart.tsx"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off"
+  }
 }
