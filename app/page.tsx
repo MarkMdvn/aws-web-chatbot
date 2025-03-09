@@ -165,7 +165,7 @@ export default function Chat() {
             className="fixed bottom-4 right-4 z-50 w-[95%] md:w-[500px]"
           >
             <Card className="border-2">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-gradient-to-r bg-black">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-gradient-to-r bg-black rounded-t-xl">
                 <div className="flex items-center space-x-3">
                   <Image
                     src="/epoint-logo-dark-transparent.png"
@@ -188,7 +188,7 @@ export default function Chat() {
 
               <hr className="border-0 mb-2 h-[2px] bg-gradient-to-r from-pink-500 via-blue-500 to-violet-500" />
               <CardContent>
-                <ScrollArea className="h-[400px] pr-4">
+                <ScrollArea className="h-[500px] pr-4">
                   {processedMessages?.length === 0 ? (
                     <div className="w-full mt-32 text-gray-500 flex items-center justify-center gap-3">
                       Comienza una conversación
@@ -261,6 +261,14 @@ export default function Chat() {
                                     >
                                       {children}
                                     </pre>
+                                  );
+                                },
+                                a({ node, ...props }) {
+                                  return (
+                                    <a
+                                      {...props}
+                                      className="text-pink-500 font-bold hover:underline transition-colors"
+                                    />
                                   );
                                 },
                               }}
