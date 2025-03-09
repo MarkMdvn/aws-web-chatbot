@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     const { messages, sessionId } = body;
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json(
-        { error: "No messages provided." },
+        { error: "No se ha envíado ningún mensaje" },
         { status: 400 }
       );
     }
@@ -27,8 +27,8 @@ export async function POST(request: Request) {
     const inputText = lastUserMessage.content;
 
     // Agent details
-    const agentId = "SS2ALX2HQ3";
-    const agentAliasId = "UVLDFD4TV5";
+    const agentId = process.env.BEDROCK_AGENT_ID;
+    const agentAliasId = process.env.BEDROCK_AGENT_ALIAS_ID;
 
     // Generate a sessionId if one is not provided
     const effectiveSessionId = sessionId || randomUUID();
