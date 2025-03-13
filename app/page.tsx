@@ -129,6 +129,19 @@ export default function Chat() {
     }
   }, [processedMessages]);
 
+  useEffect(() => {
+    const newWidth = isChatOpen ? 370 : 50;
+    const newHeight = isChatOpen ? 700 : 50;
+    window.parent.postMessage(
+      {
+        type: "resize-chatbot",
+        width: newWidth,
+        height: newHeight,
+      },
+      "*"
+    );
+  }, [isChatOpen]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <AnimatePresence>
