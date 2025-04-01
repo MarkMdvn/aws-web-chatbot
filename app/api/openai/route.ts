@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 
 const ASSISTANT_ID = "asst_nipc9GXJQ6gmPoWo6i3Bs9tV";
-const PROJECT_ID = "proj_7457brf0vep8AB8VD9sC60IV";
 const BETA_HEADER = { "OpenAI-Beta": "assistants=v2" };
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    // Create a new thread using the correct endpoint without project_id
+    // Create a new thread using the correct endpoint
     const threadRes = await fetch("https://api.openai.com/v1/threads", {
       method: "POST",
       headers: {
@@ -60,7 +59,6 @@ export async function POST(request: Request) {
     }
 
     // Trigger a run for the thread with assistant_id
-    // Keep project_id if your organization needs it and supports it
     const runRes = await fetch(
       `https://api.openai.com/v1/threads/${threadId}/runs`,
       {
@@ -72,7 +70,6 @@ export async function POST(request: Request) {
         },
         body: JSON.stringify({
           assistant_id: ASSISTANT_ID,
-          // project_id removed from here as well, add back if needed by your org
         }),
       }
     );
@@ -144,11 +141,38 @@ export async function POST(request: Request) {
       );
     }
     const messagesData = await messagesRes.json();
-    // Assume the assistant's reply is the last message with role "assistant"
-    const assistantMessage =
-      messagesData.data.find((msg: any) => msg.role === "assistant") || null;
 
-    return NextResponse.json({ message: assistantMessage });
+    // Find the assistant's message in the data array
+    const assistantMessage = messagesData.data?.find(
+      (msg: any) => msg.role === "assistant"
+    );
+
+    // If we found an assistant message, extract the content and return it
+    if (assistantMessage) {
+      // Extract the text content from the message
+      let textContent = "";
+      if (Array.isArray(assistantMessage.content)) {
+        // OpenAI can return content as an array of blocks
+        for (const block of assistantMessage.content) {
+          if (block.type === "text") {
+            textContent += block.text.value;
+          }
+        }
+      }
+
+      // Return a simplified message structure that matches what the chat component expects
+      return NextResponse.json({
+        id: assistantMessage.id,
+        role: "assistant",
+        content: textContent,
+        createdAt: new Date(assistantMessage.created_at * 1000).toISOString(),
+      });
+    }
+
+    return NextResponse.json(
+      { error: "No assistant message found" },
+      { status: 404 }
+    );
   } catch (error) {
     console.error("Error in OpenAI Assistants API route:", error);
     return NextResponse.error();

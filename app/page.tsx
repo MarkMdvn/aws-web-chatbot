@@ -29,7 +29,7 @@ export default function Chat() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showChatIcon, setShowChatIcon] = useState(true);
   const chatIconRef = useRef<HTMLButtonElement>(null);
-  const [processedMessages, setProcessedMessages] = useState([]);
+  const [processedMessages, setProcessedMessages] = useState<any[]>([]);
 
   const {
     messages,
@@ -44,6 +44,10 @@ export default function Chat() {
   } = useChat({
     api: "/api/openai", // Updated endpoint for OpenAI
     streamProtocol: "text",
+    onResponse: (response) => {
+      // You can log the response to see its structure
+      console.log("API Response:", response);
+    },
   });
 
   // Add initial welcome message when component mounts
@@ -57,12 +61,12 @@ export default function Chat() {
           "¡Hola! Soy el asistente virtual de epoint.es ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre nuestros servicios de desarrollo web, marketing digital o consultoría tecnológica.",
         createdAt: new Date(),
       };
-      // @ts-expect-error Ignore this because it is just the welcome message
       setMessages([welcomeMessage]);
     }
   }, []);
 
-  // Process messages to extract text content from JSON responses
+  // Process messages to extract text content from complex OpenAI response structure
+  // Update the useEffect that processes messages
   useEffect(() => {
     if (!messages || messages.length === 0) {
       setProcessedMessages([]);
@@ -70,26 +74,53 @@ export default function Chat() {
     }
 
     const processed = messages.map((message) => {
+      // User messages don't need processing
       if (message.role === "user") {
         return message;
       }
 
-      // Process assistant messages to extract text from JSON if needed
       try {
         let content = message.content;
 
-        // Check if the content is a JSON string
-        if (
-          typeof content === "string" &&
-          content.trim().startsWith("{") &&
-          content.includes('"text"')
-        ) {
-          const parsed = JSON.parse(content);
-          if (parsed.text) {
-            content = parsed.text;
+        // Handle messages that are already in JSON format from the API
+        if (typeof content === "string") {
+          // Check if the content looks like JSON (starts with { or [)
+          if (
+            content.trim().startsWith("{") ||
+            content.trim().startsWith("[")
+          ) {
+            try {
+              const parsed = JSON.parse(content);
+
+              // Handle specific OpenAI format as shown in your example
+              if (parsed.content) {
+                content = parsed.content;
+              } else if (parsed.message && parsed.message.content) {
+                // Handle nested message structure
+                const messageContent = parsed.message.content;
+
+                if (Array.isArray(messageContent)) {
+                  // Extract text from content blocks
+                  const textParts = messageContent
+                    .filter((block) => block.type === "text")
+                    .map((block) => block.text.value);
+
+                  content = textParts.join("\n");
+                } else if (typeof messageContent === "string") {
+                  content = messageContent;
+                }
+              } else if (parsed.text) {
+                // Handle simple text format
+                content = parsed.text;
+              }
+            } catch (e) {
+              // If parsing fails, use original content
+              console.error("Error parsing message JSON:", e);
+            }
           }
         }
 
+        // Return processed message
         return {
           ...message,
           content,
@@ -99,7 +130,7 @@ export default function Chat() {
         return message;
       }
     });
-    // @ts-expect-error Ignore this because it is just the welcome message
+
     setProcessedMessages(processed);
   }, [messages]);
 
@@ -127,6 +158,15 @@ export default function Chat() {
       "*"
     );
   }, [isChatOpen]);
+
+  // Custom submit handler to modify the API response
+  const customHandleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (input.trim() === "") return;
+
+    // Let the original handler process the submission
+    handleSubmit(e);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -197,38 +237,32 @@ export default function Chat() {
                       <div
                         key={index}
                         className={`mb-4 ${
-                          // @ts-expect-error Ignore this because it is just the welcome message
                           message.role === "user" ? "text-right" : "text-left"
                         }`}
                       >
                         <div
                           className={`flex ${
-                            // @ts-expect-error Ignore this because it is just the welcome message
                             message.role === "user"
                               ? "justify-end"
                               : "justify-start items-start"
                           }`}
                         >
-                          {
-                            // @ts-expect-error Ignore this because it is just the welcome message
-                            message.role === "assistant" && (
-                              <div className="mr-2 flex-shrink-0">
-                                <div className="rounded-full w-6 h-6 flex items-center justify-center overflow-hidden shadow-[0_0_10px_rgba(255,105,180,0.5)]">
-                                  <Image
-                                    src="/logo-epoint-blanco.png"
-                                    alt="Assistant"
-                                    width={24}
-                                    height={24}
-                                    className="rounded-full"
-                                  />
-                                </div>
+                          {message.role === "assistant" && (
+                            <div className="mr-2 flex-shrink-0">
+                              <div className="rounded-full w-6 h-6 flex items-center justify-center overflow-hidden shadow-[0_0_10px_rgba(255,105,180,0.5)]">
+                                <Image
+                                  src="/logo-epoint-blanco.png"
+                                  alt="Assistant"
+                                  width={24}
+                                  height={24}
+                                  className="rounded-full"
+                                />
                               </div>
-                            )
-                          }
+                            </div>
+                          )}
 
                           <div
-                            className={`inline-block rounded-2xl p-2  ${
-                              // @ts-expect-error Ignore this because it is just the welcome message
+                            className={`inline-block rounded-2xl p-2 ${
                               message.role === "user"
                                 ? "bg-primary text-primary-foreground"
                                 : "bg-[#fbcfe8]"
@@ -239,7 +273,6 @@ export default function Chat() {
                               components={{
                                 code({
                                   node,
-                                  // @ts-expect-error Ignore this because it is just the welcome message
                                   inline,
                                   className,
                                   children,
@@ -253,7 +286,6 @@ export default function Chat() {
                                       {children}
                                     </code>
                                   ) : (
-                                    // @ts-expect-error Ignore this because it is just the welcome message
                                     <pre
                                       {...props}
                                       className="bg-gray-200 p-2 rounded"
@@ -272,10 +304,7 @@ export default function Chat() {
                                 },
                               }}
                             >
-                              {
-                                // @ts-expect-error Ignore this because it is just the welcome message
-                                message.content
-                              }
+                              {message.content}
                             </ReactMarkdown>
                           </div>
                         </div>
@@ -311,7 +340,7 @@ export default function Chat() {
               </CardContent>
               <CardFooter>
                 <form
-                  onSubmit={handleSubmit}
+                  onSubmit={customHandleSubmit}
                   className="flex w-full items-center space-x-2"
                 >
                   <Input
