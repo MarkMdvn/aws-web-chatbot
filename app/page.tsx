@@ -42,7 +42,7 @@ export default function Chat() {
     error,
     setMessages,
   } = useChat({
-    api: "/api/aws-bedrock",
+    api: "/api/openai", // Updated endpoint for OpenAI
     streamProtocol: "text",
   });
 
@@ -104,20 +104,6 @@ export default function Chat() {
   }, [messages]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 100) {
-  //       setShowChatIcon(true);
-  //     } else {
-  //       setShowChatIcon(false);
-  //       setIsChatOpen(false);
-  //     }
-  //   };
-  //   handleScroll();
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
