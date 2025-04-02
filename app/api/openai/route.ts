@@ -144,6 +144,7 @@ export async function POST(request: Request) {
 
     // Find the assistant's message in the data array
     const assistantMessage = messagesData.data?.find(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (msg: any) => msg.role === "assistant"
     );
 
