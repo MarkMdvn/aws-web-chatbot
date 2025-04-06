@@ -187,17 +187,19 @@ export default function Chat() {
               ref={chatIconRef}
               onClick={toggleChat}
               size="icon"
-              className="rounded-full size-14 p-2 shadow-lg"
+              className="relative rounded-full size-14 p-2 bg-white  transition-all duration-200 hover:bg-pink-600/10 hover:shadow-[0_0_20px_rgba(236,72,153,1)]"
             >
-              {!isChatOpen ? (
-                <MessageCircle className="size-10" />
-              ) : (
-                <ArrowDownCircleIcon />
-              )}
+              <Image
+                src="/epoint-transparent-logo.png"
+                alt="Chat Icon"
+                fill
+                className="object-contain"
+              />
             </Button>
           </motion.div>
         )}
       </AnimatePresence>
+
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
@@ -357,11 +359,11 @@ export default function Chat() {
                   />
                   <Button
                     type="submit"
-                    className="size-9"
+                    className="size-9 bg-pink-400 hover:bg-pink-500"
                     disabled={isLoading}
                     size="icon"
                   >
-                    <Send className="size-4" />
+                    <Send className="size-4 text-black" />
                   </Button>
                 </form>
               </CardFooter>
