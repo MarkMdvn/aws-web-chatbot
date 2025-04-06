@@ -187,10 +187,10 @@ export default function Chat() {
               ref={chatIconRef}
               onClick={toggleChat}
               size="icon"
-              className="relative rounded-full size-14 p-2 bg-white  transition-all duration-200 hover:bg-pink-600/10 hover:shadow-[0_0_20px_rgba(236,72,153,1)]"
+              className="relative rounded-full size-14 p-2 bg-white transition-all duration-500 hover:bg-white hover:shadow-[0_0_20px_rgba(236,72,153,1)]"
             >
               <Image
-                src="/epoint-transparent-logo.png"
+                src="/logo-epoint-blanco-final.png"
                 alt="Chat Icon"
                 fill
                 className="object-contain"
@@ -307,6 +307,7 @@ export default function Chat() {
                                     <a
                                       {...props}
                                       className="text-pink-500 font-bold hover:underline transition-colors"
+                                      target="_blank"
                                     />
                                   );
                                 },
