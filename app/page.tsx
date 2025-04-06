@@ -187,10 +187,10 @@ export default function Chat() {
               ref={chatIconRef}
               onClick={toggleChat}
               size="icon"
-              className="relative rounded-full size-14 p-2 bg-white transition-all duration-500 hover:bg-white hover:shadow-[0_0_20px_rgba(236,72,153,1)]"
+              className="relative rounded-full size-14 p-2 bg-transparent transition-all duration-500 hover:bg-transparent hover:shadow-[0_0_20px_rgba(236,72,153,1)]"
             >
               <Image
-                src="/logo-epoint-blanco-final.png"
+                src="/logo-epoint-blanco-final-2.png"
                 alt="Chat Icon"
                 fill
                 className="object-contain"
