@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable react-hooks/exhaustive-deps */
-
+import { BsChat } from "react-icons/bs";
 import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -187,14 +187,9 @@ export default function Chat() {
               ref={chatIconRef}
               onClick={toggleChat}
               size="icon"
-              className="relative rounded-full size-14 p-2 bg-transparent transition-all duration-500 hover:bg-transparent hover:shadow-[0_0_20px_rgba(236,72,153,1)]"
+              className="relative rounded-full size-14 p-2 bg-[rgba(236,72,153,1)] transition-all duration-500 transform hover:scale-110 hover:shadow-[0_0_20px_rgba(236,72,153,1)]"
             >
-              <Image
-                src="/logo-epoint-blanco-final-2.png"
-                alt="Chat Icon"
-                fill
-                className="object-contain"
-              />
+              <BsChat size={80} className="text-white" strokeWidth={1} />
             </Button>
           </motion.div>
         )}
