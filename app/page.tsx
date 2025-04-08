@@ -151,8 +151,8 @@ export default function Chat() {
   }, [processedMessages]);
 
   useEffect(() => {
-    const newWidth = isChatOpen ? 500 : 80;
-    const newHeight = isChatOpen ? 700 : 80;
+    const newWidth = isChatOpen ? 500 : 100;
+    const newHeight = isChatOpen ? 700 : 100;
     window.parent.postMessage(
       {
         type: "resize-chatbot",
