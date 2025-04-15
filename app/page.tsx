@@ -60,7 +60,7 @@ export default function Chat() {
         id: "welcome-message",
         role: "assistant",
         content:
-          "¡Hola! Soy el asistente virtual de epoint.es ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre nuestros servicios de desarrollo web, marketing digital o consultoría tecnológica.",
+          "¡Hola! Soy el asistente virtual de Alcamancha Cooperativa. ¿En qué puedo ayudarte hoy? Pregúntame sobre la PAC, insumos, venta de cosechas o nuestros servicios de asesoramiento.",
         createdAt: new Date(),
       };
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -151,8 +151,8 @@ export default function Chat() {
   }, [processedMessages]);
 
   useEffect(() => {
-    const newWidth = isChatOpen ? 500 : 100;
-    const newHeight = isChatOpen ? 700 : 100;
+    const newWidth = isChatOpen ? 520 : 100;
+    const newHeight = isChatOpen ? 720 : 100;
     window.parent.postMessage(
       {
         type: "resize-chatbot",
