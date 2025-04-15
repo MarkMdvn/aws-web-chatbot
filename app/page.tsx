@@ -187,7 +187,7 @@ export default function Chat() {
               ref={chatIconRef}
               onClick={toggleChat}
               size="icon"
-              className="relative rounded-full size-14 p-2 bg-[rgba(236,72,153,1)] transition-all duration-500 transform hover:scale-110 hover:shadow-[0_0_20px_rgba(236,72,153,1)]"
+              className="relative rounded-full size-14 p-2 bg-green-600 transition-all duration-500 transform hover:scale-110 hover:shadow-lg hover:shadow-green-600/50"
             >
               <RiChatAiLine
                 style={{ transform: "scale(1.7)" }} // Escalado al 200%
@@ -208,10 +208,10 @@ export default function Chat() {
             className="fixed bottom-4 right-4 z-50 w-[95%] md:w-[500px]"
           >
             <Card className="border-2">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-gradient-to-r bg-black rounded-t-xl">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 bg-gradient-to-r from-green-500/10 to-green-500/50 rounded-t-xl">
                 <div className="flex items-center space-x-3">
                   <Image
-                    src="/epoint-logo-dark-transparent.png"
+                    src="/logo-alcamancha-header.png"
                     alt="Logo epoint"
                     width={150}
                     height={50}
@@ -222,14 +222,13 @@ export default function Chat() {
                   onClick={toggleChat}
                   variant="ghost"
                   size="sm"
-                  className="px-2 py-0 text-white hover:bg-white/20 transition-colors"
+                  className="px-2 py-0 text-black hover:bg-green-400/90 transition-colors"
                 >
                   <X className="size-4" />
                   <span className="sr-only">Cerrar Chat</span>
                 </Button>
               </CardHeader>
-
-              <hr className="border-0 mb-2 h-[2px] bg-gradient-to-r from-pink-500 via-blue-500 to-violet-500" />
+              <hr className="border-0 mb-2 h-[2px] bg-gradient-to-r from-green-400 via-green-500 to-green-900" />{" "}
               <CardContent>
                 <ScrollArea className="h-[500px] pr-4">
                   {processedMessages?.length === 0 ? (
@@ -252,13 +251,16 @@ export default function Chat() {
                           }`}
                         >
                           {message.role === "assistant" && (
-                            <div className="mr-2 flex-shrink-0">
-                              <div className="rounded-full w-6 h-6 flex items-center justify-center overflow-hidden shadow-[0_0_10px_rgba(255,105,180,0.5)]">
+                            <div className="mr-2 flex-shrink-0 pl-2 pt-2">
+                              {/* Container: Shadow color changed to green */}
+                              <div className="rounded-full w-6 h-6 flex items-center justify-center overflow-hidden shadow-[0_0_10px_rgba(22,163,74,0.5)]">
+                                {" "}
+                                {/* Green shadow */}
                                 <Image
-                                  src="/logo-epoint-blanco.png"
+                                  src="/logo-alcamancha-header1.png"
                                   alt="Assistant"
-                                  width={24}
-                                  height={24}
+                                  width={20}
+                                  height={20}
                                   className="rounded-full"
                                 />
                               </div>
@@ -268,8 +270,8 @@ export default function Chat() {
                           <div
                             className={`inline-block rounded-2xl p-2 ${
                               message.role === "user"
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-[#fbcfe8]"
+                                ? "bg-green-900 text-primary-foreground"
+                                : "bg-green-100"
                             }`}
                           >
                             <ReactMarkdown
@@ -304,7 +306,7 @@ export default function Chat() {
                                   return (
                                     <a
                                       {...props}
-                                      className="text-pink-500 font-bold hover:underline transition-colors"
+                                      className="text-green-500 font-bold hover:underline transition-colors"
                                       target="_blank"
                                     />
                                   );
@@ -358,7 +360,7 @@ export default function Chat() {
                   />
                   <Button
                     type="submit"
-                    className="size-9 bg-pink-400 hover:bg-pink-500"
+                    className="size-9 bg-green-400 hover:bg-green-500"
                     disabled={isLoading}
                     size="icon"
                   >

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const ASSISTANT_ID = "asst_nipc9GXJQ6gmPoWo6i3Bs9tV";
+const ASSISTANT_ID = "asst_o2HlHDm1v36zF9ndsMQptGm9";
 const BETA_HEADER = { "OpenAI-Beta": "assistants=v2" };
 
 export async function POST(request: Request) {
