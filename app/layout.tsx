@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Asistente Epoint",
+  title: "Asistente Alcamancha",
   description: "Creado por epoint.es",
 };
 
