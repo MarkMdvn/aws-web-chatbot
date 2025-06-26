@@ -1,10 +1,16 @@
 # Embeddable AI Web Chatbot Assistant
 
+<img src="https://github.com/MarkMdvn/aws-web-chatbot/blob/main/docs/assets/3-both-cases.jpg" alt="Overview" width="700"/>
+
+
 ## Project Overview
 
 This repository contains the source code for a reusable, full-stack AI Chatbot Assistant, designed to be easily embedded into any website. The project manifests as a familiar chat bubble in the bottom-right corner of the screen, providing visitors with an intuitive way to ask questions and receive context-aware answers about the webpage's content.
 
 The architecture is built for scalability and ease of deployment, combining a modern Next.js frontend with a serverless Python backend on AWS. The core intelligence is powered by the **OpenAI Assistants API**, allowing for sophisticated, stateful conversations. This project serves as a template for creating and deploying specialized chatbots that can be configured with a unique OpenAI Assistant ID and deployed seamlessly to cloud platforms like AWS Amplify.
+
+<img src="https://github.com/MarkMdvn/aws-web-chatbot/blob/main/docs/assets/1-example-alcamancha.png" alt="Overview" width="700"/>
+
 
 ## System Architecture
 
@@ -15,6 +21,9 @@ The application operates on a serverless model, ensuring a cost-effective and hi
 3.  **AWS Lambda (Python):** This function serves as the orchestrator. It receives the user's message and the conversation thread ID (if one exists). It then interacts with the specified **OpenAI Assistant** using the official API, passing the message to the correct thread.
 4.  **OpenAI Assistants API:** OpenAI manages the conversation thread, loads the necessary context, and generates a relevant response using the pre-configured Assistant.
 5.  **Return Flow:** The response is sent back to the Lambda function, then through API Gateway to the Next.js frontend. The chat UI updates in real-time, displaying the assistant's answer.
+
+<img src="https://github.com/MarkMdvn/aws-web-chatbot/blob/main/docs/assets/2-example-epoint.png" alt="Overview" width="700"/>
+
 
 ## Technology Stack
 
