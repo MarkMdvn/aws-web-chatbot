@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Embeddable AI Web Chatbot Assistant
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+This repository contains the source code for a reusable, full-stack AI Chatbot Assistant, designed to be easily embedded into any website. The project manifests as a familiar chat bubble in the bottom-right corner of the screen, providing visitors with an intuitive way to ask questions and receive context-aware answers about the webpage's content.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The architecture is built for scalability and ease of deployment, combining a modern Next.js frontend with a serverless Python backend on AWS. The core intelligence is powered by the **OpenAI Assistants API**, allowing for sophisticated, stateful conversations. This project serves as a template for creating and deploying specialized chatbots that can be configured with a unique OpenAI Assistant ID and deployed seamlessly to cloud platforms like AWS Amplify.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## System Architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The application operates on a serverless model, ensuring a cost-effective and highly scalable solution. The data flow is orchestrated to handle conversational context:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1.  **Frontend (Next.js):** A visitor on the host website clicks the chat bubble and sends a message. The Next.js component captures the message and calls a secure backend endpoint.
+2.  **API Gateway:** Amazon API Gateway receives the request and triggers the AWS Lambda function, acting as a secure proxy.
+3.  **AWS Lambda (Python):** This function serves as the orchestrator. It receives the user's message and the conversation thread ID (if one exists). It then interacts with the specified **OpenAI Assistant** using the official API, passing the message to the correct thread.
+4.  **OpenAI Assistants API:** OpenAI manages the conversation thread, loads the necessary context, and generates a relevant response using the pre-configured Assistant.
+5.  **Return Flow:** The response is sent back to the Lambda function, then through API Gateway to the Next.js frontend. The chat UI updates in real-time, displaying the assistant's answer.
 
-## Learn More
+## Technology Stack
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  * **Framework:** Next.js / React
+  * **Language:** TypeScript
+  * **Styling:** Tailwind CSS
+  * **State Management:** React Hooks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Backend
 
-## Deploy on Vercel
+  * **Cloud Provider:** Amazon Web Services (AWS)
+  * **Serverless Compute:** AWS Lambda (Python 3.x runtime)
+  * **API Layer:** Amazon API Gateway
+  * **Core Logic:** Python
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### AI Integration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+  * **Service:** OpenAI Assistants API
+
+## Core Features
+
+  * **Embeddable Chat Bubble:** A clean, familiar UI component that can be integrated into any website.
+  * **Powered by OpenAI Assistants:** Leverages the power of custom-trained OpenAI Assistants for specialized knowledge.
+  * **Stateful Conversations:** Maintains conversation history and context for follow-up questions.
+  * **Easy Configuration:** Simply requires an OpenAI Assistant ID and API Key to be fully functional.
+  * **Serverless & Scalable:** No servers to manage; automatically scales with user demand.
+  * **Ready for Amplify Deployment:** Streamlined for easy deployment and hosting on AWS Amplify.
+
+
