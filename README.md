@@ -39,7 +39,7 @@ The application operates on a serverless model, ensuring a cost-effective and hi
   * **Cloud Provider:** Amazon Web Services (AWS)
   * **Serverless Compute:** AWS Lambda (Python 3.x runtime)
   * **API Layer:** Amazon API Gateway
-  * **Core Logic:** Python
+  * **Core Logic:** Typescript
 
 ### AI Integration
 
